@@ -1,0 +1,161 @@
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 70px 80px 1fr auto;
+  grid-template-areas:
+    "nav"
+    "head"
+    "content"
+    "footer";
+  gap: 0px;
+  height: 100vh;
+}
+
+header {
+  grid-area: head;
+  background-color: #fff;
+  text-align: center;
+  line-height: 70px;
+}
+
+main {
+  grid-area: content;
+  color: #fff;
+  padding: 20px;
+  background-image: url('../images/style/background.webp');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+footer {
+  grid-area: footer;
+  background-color: #000;
+  color: #fff;
+  text-align: center;
+  line-height: 10px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: bold;
+  text-align: left;
+  margin-bottom: 20px;
+  color: #000;
+}
+
+img {
+  height: auto;
+}
+
+nav#horizontal-menu {
+  background-color: #000;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 20px;
+}
+
+nav#horizontal-menu img {
+  max-width: 90%;
+  height: 90%;
+}
+
+nav#horizontal-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+nav#horizontal-menu ul li.logo a {
+  font-size: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #fff;
+  text-decoration: none;
+}
+
+nav#horizontal-menu ul li a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 10px 0;
+  transition: color 0.2s ease;
+}
+
+nav#horizontal-menu ul li a:hover {
+  color: #ccc;
+}
+
+#catalog {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.item {
+  position: relative;
+  width: calc(50% - 10px);
+  max-width: 300px;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+}
+
+.item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+@media (max-width: 768px) {
+
+  .grid-container {
+    grid-template-rows: 50px 60px 1fr auto;
+  }
+  
+  nav#horizontal-menu {
+    padding: 0 10px;
+  }
+  
+  nav#horizontal-menu ul {
+    gap: 10px;
+  }
+  
+  nav#horizontal-menu ul li a,
+  nav#horizontal-menu ul li.logo a {
+    font-size: 12px;
+  }
+  
+  footer {
+    line-height: 20px;
+    font-size: 12px;
+  }
+  
+  nav#horizontal-menu img {
+    width: 60%;
+    height: 60%;
+  }
+
+  main {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .page-title {
+    font-size: 16px;
+  }
+
+  #catalog {
+    flex-direction: column;
+    align-items: center;
+  }
+
+}
