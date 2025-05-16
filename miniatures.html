@@ -5,15 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Мініатюри - Warhammer UA Community</title>
   <link rel="stylesheet" href="./css/styles.css">
-  <style>
-    main {
-      background: none;
-      padding: 20px;
-    }
-  </style>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 <body>
-  <div class="grid-container">
+  <div id="vue-cart-app" class="grid-container">
     <nav id="horizontal-menu">
       <ul>
         <li class="logo">
@@ -22,6 +17,7 @@
           </a>
         </li>
         <li><a href="miniatures.html">Мініатюри</a></li>
+        <li><a href="#" @click.prevent="openCart">Кошик ({{ cartItemCount }})</a></li>
       </ul>
     </nav>
     <header>
@@ -30,14 +26,48 @@
     <main>
       <div class="page-title">НОВІ МІНІАТЮРИ</div>
       <div id="catalog">
-        <div class="item"><img src="./images/miniatures/imperial guard/vehicle/RogalDornBattleTank.jpg" alt="Танк Рогал Дорн"></div>
-        <div class="item"><img src="./images/miniatures/primarch/FulgrimTransfigured.jpg" alt="Фулгрім"></div>
-        <div class="item"><img src="./images/miniatures/primarch/LionsRetinue.jpg" alt="Ліон"></div>
+        <div class="item" v-for="product in products" :key="product.id">
+          <img :src="product.image" :alt="product.name">
+          <div class="item-details">
+            <h3>{{ product.name }}</h3>
+            <p class="price">{{ product.price }} грн</p>
+            <button class="add-to-cart-btn" @click="addToCart(product)">Додати в кошик</button>
+          </div>
+        </div>
       </div>
     </main>
     <footer>
       <p>&copy; 2025 WARHAMMER UA COMMUNITY</p>
     </footer>
-  </div>
+
+    <div id="cart-modal" class="modal" :class="{ 'is-active': isCartVisible }">
+      <div class="modal-content">
+        <span class="close-button" @click="closeCart">&times;</span>
+        <h2>Ваш Кошик</h2>
+        <div id="cart-items-container">
+          <div v-if="cart.length === 0" class="empty-cart-message">
+            Ваш кошик порожній.
+          </div>
+          <div v-else class="cart-item" v-for="item in cart" :key="item.id">
+            <img :src="item.image" :alt="item.name">
+            <div class="cart-item-details">
+              <h4>{{ item.name }}</h4>
+              <p>Ціна: {{ item.price }} грн</p>
+            </div>
+            <div class="cart-item-quantity">
+              <input type="number" :value="item.quantity" @change="updateQuantity(item.id, $event.target.value)" min="1" :aria-label="'Кількість для ' + item.name">
+            </div>
+            <p class="cart-item-subtotal">{{ item.price * item.quantity }} грн</p>
+            <button class="cart-item-remove-btn" @click="removeFromCart(item.id)" :aria-label="'Видалити ' + item.name + ' з кошика'">&times;</button>
+          </div>
+        </div>
+        <div class="cart-summary" v-if="cart.length > 0">
+          <p>Разом: <span id="cart-total-display">{{ cartTotal }}</span> грн</p> <button id="checkout-button">Оформити замовлення</button>
+        </div>
+      </div>
+    </div>
+  </div> <div id="cart-notification"></div>
+
+  <script src="./js/scripts.js"></script>
 </body>
 </html>
