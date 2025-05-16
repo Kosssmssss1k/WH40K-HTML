@@ -4,8 +4,8 @@ createApp({
   setup() {
     const products = ref([
         { id: 'rogal_dorn', name: 'Танк Рогал Дорн', price: 2500, image: './images/miniatures/imperial guard/vehicle/RogalDornBattleTank.jpg' },
-        { id: 'fulgrim_transfigured', name: 'Фулгрім Преображений', price: 1800, image: './images/miniatures/primarch/FulgrimTransfigured.jpg' },
-        { id: 'lions_retinue', name: 'Почет Ліона', price: 3200, image: './images/miniatures/primarch/LionsRetinue.jpg' }
+        { id: 'fulgrim_transfigured', name: 'Фулгрім', price: 1800, image: './images/miniatures/primarch/FulgrimTransfigured.jpg' },
+        { id: 'lions_retinue', name: 'Ліон', price: 3200, image: './images/miniatures/primarch/LionsRetinue.jpg' }
     ]);
     const cart = ref([]); 
     const isCartVisible = ref(false);
