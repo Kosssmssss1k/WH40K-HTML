@@ -2,24 +2,43 @@ const { createApp, ref, computed, onMounted, watch } = Vue;
 
 createApp({
   setup() {
-    const products = ref([
-        { id: 'rogal_dorn', name: 'Танк Рогал Дорн', price: 2500, image: './images/miniatures/imperial guard/vehicle/RogalDornBattleTank.jpg' },
-        { id: 'fulgrim_transfigured', name: 'Фулгрім', price: 1800, image: './images/miniatures/primarch/FulgrimTransfigured.jpg' },
-        { id: 'lions_retinue', name: 'Ліон', price: 3200, image: './images/miniatures/primarch/LionsRetinue.jpg' }
-    ]);
-    const cart = ref([]); 
+    const products = ref([]);
+    const cart = ref([]);
     const isCartVisible = ref(false);
+    const selectedFaction = ref('all');
+    const selectedCategory = ref('all');
+
+    const fetchProducts = async () => {
+      const params = new URLSearchParams({
+        faction: selectedFaction.value,
+        category: selectedCategory.value,
+      });
+      const url = `api_get_products.php?${params.toString()}`;
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Network response was not ok.");
+        const data = await response.json();
+        products.value = data;
+      } catch (error) {
+        console.error("Не вдалося завантажити товари:", error);
+        products.value = [];
+      }
+    };
 
     onMounted(() => {
+      fetchProducts();
       const savedCart = localStorage.getItem('warhammerShopCart');
       if (savedCart) {
         cart.value = JSON.parse(savedCart);
       }
     });
 
+    watch([selectedFaction, selectedCategory], fetchProducts);
+
     watch(cart, (newCart) => {
       localStorage.setItem('warhammerShopCart', JSON.stringify(newCart));
-    }, { deep: true }); 
+    }, { deep: true });
 
     const cartItemCount = computed(() => {
       return cart.value.reduce((sum, item) => sum + item.quantity, 0);
@@ -29,6 +48,17 @@ createApp({
       return cart.value.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     });
 
+    const showNotification = (message) => {
+      const notificationElement = document.getElementById('cart-notification');
+      if (notificationElement) {
+        notificationElement.textContent = message;
+        notificationElement.style.display = 'block';
+        setTimeout(() => {
+          notificationElement.style.display = 'none';
+        }, 3000);
+      }
+    };
+    
     const addToCart = (product) => {
       const existingItem = cart.value.find(item => item.id === product.id);
       if (existingItem) {
@@ -56,27 +86,8 @@ createApp({
       }
     };
 
-    const openCart = () => {
-      isCartVisible.value = true;
-    };
-
-    const closeCart = () => {
-      isCartVisible.value = false;
-    };
-    
-    const showNotification = (message) => {
-        const notificationElement = document.getElementById('cart-notification');
-        if (notificationElement) {
-            notificationElement.textContent = message;
-            notificationElement.style.display = 'block';
-
-            setTimeout(() => {
-                notificationElement.style.display = 'none';
-            }, 3000);
-        } else {
-            console.warn("Елемент #cart-notification не знайдено на сторінці.");
-        }
-    };
+    const openCart = () => { isCartVisible.value = true; };
+    const closeCart = () => { isCartVisible.value = false; };
 
     return {
       products,
@@ -88,7 +99,9 @@ createApp({
       removeFromCart,
       updateQuantity,
       openCart,
-      closeCart
+      closeCart,
+      selectedFaction,
+      selectedCategory,
     };
   }
-}).mount('#vue-cart-app'); // Монтуємо додаток до div#vue-cart-app
+}).mount('#vue-cart-app');

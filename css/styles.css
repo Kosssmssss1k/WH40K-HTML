@@ -481,6 +481,48 @@ nav#horizontal-menu ul li a:hover {
     padding: 10px;
     font-size: 1em;
   }
+
+  #filters {
+    background-color: #f1f1f1;
+    padding: 15px;
+    margin-bottom: 25px;
+    border-radius: 5px;
+}
+
+.filter-form {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-group label {
+    font-weight: bold;
+    color: #333;
+}
+
+.filter-group select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 14px;
+}
+
+.no-results {
+    color: #000;
+    font-size: 1.2em;
+    width: 100%;
+    text-align: center;
+    padding: 40px 0;
+}
+
 }
 
 @media (max-width: 480px) { 

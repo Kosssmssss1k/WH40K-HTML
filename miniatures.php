@@ -1,3 +1,22 @@
+<?php
+$host = 'localhost';
+$db   = 'whst';
+$user = 'student';
+$pass = '123';
+$charset = 'utf8mb4';
+$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+$options = [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC];
+
+try {
+    $pdo = new PDO($dsn, $user, $pass, $options);
+    $factions = $pdo->query("SELECT DISTINCT faction FROM products ORDER BY faction ASC")->fetchAll(PDO::FETCH_COLUMN);
+    $categories = $pdo->query("SELECT DISTINCT category FROM products ORDER BY category ASC")->fetchAll(PDO::FETCH_COLUMN);
+} catch (\PDOException $e) {
+    $factions = [];
+    $categories = [];
+}
+?>
+
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -16,7 +35,7 @@
             <img src="./images/style/WhLogo.png" alt="WARHAMMER UA COMMUNITY">
           </a>
         </li>
-        <li><a href="miniatures.html">Мініатюри</a></li>
+        <li><a href="miniatures.php">Мініатюри</a></li>
         <li><a href="#" @click.prevent="openCart">Кошик ({{ cartItemCount }})</a></li>
       </ul>
     </nav>
@@ -25,7 +44,34 @@
     </header>
     <main>
       <div class="page-title">НОВІ МІНІАТЮРИ</div>
+
+      <div id="filters">
+        <form class="filter-form">
+            <div class="filter-group">
+                <label for="faction-filter">Фракція:</label>
+                <select id="faction-filter" v-model="selectedFaction">
+                    <option value="all">Всі фракції</option>
+                    <?php foreach ($factions as $faction): ?>
+                        <option value="<?= htmlspecialchars($faction) ?>"><?= htmlspecialchars($faction) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="category-filter">Категорія:</label>
+                <select id="category-filter" v-model="selectedCategory">
+                    <option value="all">Всі категорії</option>
+                    <?php foreach ($categories as $category): ?>
+                        <option value="<?= htmlspecialchars($category) ?>"><?= htmlspecialchars($category) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </form>
+      </div>
+
       <div id="catalog">
+        <div v-if="products.length === 0" class="no-results">
+            За вашим запитом товарів не знайдено.
+        </div>
         <div class="item" v-for="product in products" :key="product.id">
           <img :src="product.image" :alt="product.name">
           <div class="item-details">
@@ -66,8 +112,8 @@
         </div>
       </div>
     </div>
-  </div> <div id="cart-notification"></div>
-
+  </div> 
+  <div id="cart-notification"></div>
   <script src="./js/scripts.js"></script>
 </body>
 </html>
